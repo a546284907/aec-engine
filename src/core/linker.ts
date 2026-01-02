@@ -1,43 +1,60 @@
+/**
+ * src/core/linker.ts
+ */
 import { StdLibrary, KernelModule } from '../stdlib';
 import { CompiledContext, SupportedLang } from './types';
 
 export class AECLinker {
   /**
    * 编译 AEC 源代码
-   * @param userCode 用户输入的 AEC 伪代码
-   * @param lang 目标语言 'en' | 'zh' (默认 'en')
    */
   static compile(userCode: string, lang: SupportedLang = 'en'): CompiledContext {
-    // 1. 获取对应语言的内核 Prompt
-    // 如果没有对应的语言，回退到英文（防止报错）
-    let systemPrompt = KernelModule.prompts[lang] || KernelModule.prompts['en'];
+    // 1. 准备一个数组来存放各个部分的 Prompt，而不是直接字符串相加
+    // 这样方便后续统一处理连接符
+    const promptParts: string[] = [];
+    
+    // 获取内核 Prompt
+    const kernelPrompt = KernelModule.prompts[lang] || KernelModule.prompts['en'];
+    promptParts.push(kernelPrompt);
     
     const activeModules: string[] = [KernelModule.namespace];
+    // 修正：显式声明 tokens 类型为 string[]
     const tokens: string[] = userCode.match(/\b[A-Z_]+\b/g) || [];
 
-    // 2. 遍历加载
+    // 2. 遍历加载模块
     StdLibrary.forEach(mod => {
       if (mod.namespace === KernelModule.namespace) return;
 
       const shouldLoad = mod.keywords.some(keyword => tokens.includes(keyword));
 
       if (shouldLoad) {
-        // 获取对应语言的说明
         const modulePrompt = mod.prompts[lang] || mod.prompts['en'];
-        systemPrompt += `\n\n${modulePrompt}`;
+        promptParts.push(modulePrompt);
         activeModules.push(mod.namespace);
       }
     });
 
-    // 3. 结尾提示也应该根据语言变化（这里简单处理，或者放到 Kernel 里）
+    // 3. 准备结尾
     const footer = lang === 'zh' 
-      ? `\n\n[用户输入开始]\n${userCode}\n[用户输入结束]`
-      : `\n\n[USER_INPUT_START]\n${userCode}\n[USER_INPUT_END]`;
+      ? `[用户输入开始]\n${userCode}\n[用户输入结束]`
+      : `[USER_INPUT_START]\n${userCode}\n[USER_INPUT_END]`;
+    
+    promptParts.push(footer);
 
-    systemPrompt += footer;
+    // =========================================================
+    // 【核心优化】：Prompt 清洗与组装
+    // =========================================================
+    
+    // 1. 对每个部分进行 trim()，去除头部和尾部的多余换行
+    // 2. 使用 join('\n\n') 确保模块之间只有一个空行分隔
+    let rawPrompt = promptParts.map(part => part.trim()).join('\n\n');
+
+    // 3. (可选) 如果有些模板字符串内部写了太多换行，可以用正则把 3个以上换行压缩成 2个
+    // 这样既保留了段落感，又不会出现大片空白
+    rawPrompt = rawPrompt.replace(/\n{3,}/g, '\n\n');
 
     return {
-      systemPrompt,
+      systemPrompt: rawPrompt,
       activeModules
     };
   }

@@ -113,11 +113,3 @@ code
 Code
 ---
 
-### 如何使用这份 README：
-
-1.  **替换链接**：将 `https://github.com/your-username/aec-engine.git` 替换成你的实际仓库地址。
-2.  **创建 LICENSE 文件**：在仓库根目录创建一个 `LICENSE` 或 `LICENSE.txt` 文件，并将 MIT 许可证的文本粘贴进去（你可以在 [choosealicense.com](https://choosealicense.com/licenses/mit/) 上找到模板）。
-3.  **可选：添加 Logo**：如果你有 Logo，可以在顶部添加 `<p align="center"><img src="your-logo-url" width="200"></p>` 来让项目更引人注目。
-4.  **英文版**：`README_en.md` 可以先创建一个空文件占位，后续再翻译。
-
-这份 README 应该足以让任何访问你仓库的人在 30 秒内理解项目的价值和用法。接下来，我们就可以专注于代码实现了！

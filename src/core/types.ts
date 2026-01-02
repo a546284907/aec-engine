@@ -1,7 +1,7 @@
 /**
  * src/core/types.ts
  */
-
+export type SupportedLang = 'en' | 'zh';
 // 定义一个 AEC 指令模块的标准结构
 export interface AECModule {
   // 命名空间，用于区分模块 (e.g., "SYS_IO", "SYS_NET")
@@ -15,7 +15,10 @@ export interface AECModule {
   keywords: string[];
   
   // 发送给 AI 的具体指令说明书 (System Prompt 片段)
-  prompt: string;
+  prompts: {
+    en: string;
+    zh: string;
+  };
 }
 
 // Linker 编译后的结果对象

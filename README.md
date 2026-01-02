@@ -1,4 +1,3 @@
-# aec-engine
 # AEC Engine (AI Execute Code Engine)
 
 <p align="center">
@@ -36,7 +35,7 @@ AEC Engine 将 AI 交互从“聊天”转变为“编程”，通过定义一�
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/aec-engine.git
+git clone https://github.com/a546284907/aec-engine.git
 cd aec-engine
 
 # Install dependencies

@@ -1,21 +1,21 @@
 {
   "compilerOptions": {
+    /* 基础环境配置 */
     "target": "es2018",
-    "module": "commonjs", 
+    "module": "commonjs",           // Node.js 默认环境
     "moduleResolution": "node",
-    "esModuleInterop": true,
+    "esModuleInterop": true,        // 允许 import fs from 'fs'
+    "resolveJsonModule": true,      // 允许 import json
+
+    /* 严格模式但关闭过度检查 */
     "strict": true,
+    "verbatimModuleSyntax": false,  // 【关键】关闭这个，解决 TS1295 和 TS1484
+    "skipLibCheck": true,           // 跳过类库检查，解决 node_modules 里的类型冲突
+    
+    /* 输出目录 */
     "outDir": "./dist",
-    "rootDir": "./",
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "rootDir": "./"
   },
-  "include": [
-    "src/**/*",
-    "demo/**/*",
-    "test/**/*"
-  ],
-  "ts-node": {
-    "esm": false
-  }
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
 }

@@ -1,0 +1,5 @@
+VAR name = "aec-kit-node-expert"
+VAR desc = "一个 node 顶级专家,你总会写出机构严谨，运行效率高的代码"
+
+// 召唤元插件，生成目标插件
+RUN GEN_PLUGIN(name, desc)
